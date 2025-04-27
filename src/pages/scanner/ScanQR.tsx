@@ -45,19 +45,20 @@ const QRScanner = ({
           <div className="space-y-4 text-center">
             <div className="h-[200px] w-[200px] bg-fuel-blue-50 border-2 border-fuel-blue-200 flex items-center justify-center rounded-lg relative overflow-hidden">
               {/* Scanning animation */}
-              <div className="absolute w-full h-2 bg-fuel-blue-300 opacity-70 top-0 animation-scan" style={{ 
-                animation: "scanAnimation 2s infinite" 
-              }}></div>
-              <style jsx>{`
-                @keyframes scanAnimation {
-                  0% { transform: translateY(0); }
-                  50% { transform: translateY(200px); }
-                  100% { transform: translateY(0); }
-                }
-                .animation-scan {
-                  animation: scanAnimation 2s infinite;
-                }
-              `}</style>
+              <div className="absolute w-full h-2 bg-fuel-blue-300 opacity-70 top-0" 
+                style={{ 
+                  animation: "scanAnimation 2s infinite" 
+                }}
+              ></div>
+              <style>
+                {`
+                  @keyframes scanAnimation {
+                    0% { transform: translateY(0); }
+                    50% { transform: translateY(200px); }
+                    100% { transform: translateY(0); }
+                  }
+                `}
+              </style>
               <p className="text-fuel-blue-500 font-semibold">Scanning...</p>
             </div>
             <p className="text-gray-500">
