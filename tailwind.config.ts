@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,32 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom fuel app colors
+				'fuel-blue': {
+					50: '#f0f7ff',
+					100: '#e0f0ff',
+					200: '#bae0ff',
+					300: '#7cc6ff',
+					400: '#3aa7ff',
+					500: '#0F4C81',
+					600: '#0054a6',
+					700: '#003f7f',
+					800: '#003567',
+					900: '#002c56',
+				},
+				'fuel-green': {
+					50: '#f0fdf4',
+					100: '#dcfce7',
+					200: '#bbf7d0',
+					300: '#86efac',
+					400: '#4ade80',
+					500: '#16A34A',
+					600: '#16a34a',
+					700: '#15803d',
+					800: '#166534',
+					900: '#14532d',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
