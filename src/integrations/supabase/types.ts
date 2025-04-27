@@ -9,7 +9,149 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      stations: {
+        Row: {
+          created_at: string | null
+          email: string
+          fuel_types: string[]
+          id: string
+          location: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          fuel_types: string[]
+          id?: string
+          location: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          fuel_types?: string[]
+          id?: string
+          location?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          fuel_type: string | null
+          id: string
+          liters: number | null
+          payment_type: string
+          station_id: string | null
+          station_name: string | null
+          status: string
+          timestamp: string | null
+          user_id: string
+          vehicle_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          fuel_type?: string | null
+          id?: string
+          liters?: number | null
+          payment_type: string
+          station_id?: string | null
+          station_name?: string | null
+          status: string
+          timestamp?: string | null
+          user_id: string
+          vehicle_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          fuel_type?: string | null
+          id?: string
+          liters?: number | null
+          payment_type?: string
+          station_id?: string | null
+          station_name?: string | null
+          status?: string
+          timestamp?: string | null
+          user_id?: string
+          vehicle_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vehicles: {
+        Row: {
+          created_at: string | null
+          fuel_type: string
+          id: string
+          license_plate: string
+          make: string
+          model: string
+          type: string
+          updated_at: string | null
+          user_id: string
+          year: string
+        }
+        Insert: {
+          created_at?: string | null
+          fuel_type: string
+          id?: string
+          license_plate: string
+          make: string
+          model: string
+          type: string
+          updated_at?: string | null
+          user_id: string
+          year: string
+        }
+        Update: {
+          created_at?: string | null
+          fuel_type?: string
+          id?: string
+          license_plate?: string
+          make?: string
+          model?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+          year?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
