@@ -16,26 +16,57 @@ const QRScanner = ({
 }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [permissionDenied, setPermissionDenied] = useState(false);
+  const [scannerInitialized, setScannerInitialized] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const scannerDivId = "qr-scanner";
+  const scannerDivId = "qr-reader";
+  const { toast } = useToast();
 
   useEffect(() => {
     // Cleanup scanner when component unmounts
     return () => {
       if (scannerRef.current && scannerRef.current.isScanning) {
+        console.log("Cleaning up scanner on unmount");
         scannerRef.current.stop().catch(console.error);
       }
     };
   }, []);
 
   const handleStartScan = () => {
+    console.log("Starting scanner...");
     setIsScanning(true);
+    
+    // Create scanner container if it doesn't exist
+    const scannerContainer = document.getElementById(scannerDivId);
+    if (!scannerContainer) {
+      console.error(`Scanner container element with id=${scannerDivId} not found`);
+      toast({
+        title: "Scanner Error",
+        description: "Could not initialize scanner interface",
+        variant: "destructive",
+      });
+      setIsScanning(false);
+      return;
+    }
     
     // Initialize scanner if it doesn't exist
     if (!scannerRef.current) {
-      scannerRef.current = new Html5Qrcode(scannerDivId);
+      try {
+        console.log("Initializing scanner...");
+        scannerRef.current = new Html5Qrcode(scannerDivId);
+        setScannerInitialized(true);
+      } catch (err) {
+        console.error("Failed to initialize scanner:", err);
+        toast({
+          title: "Scanner Error",
+          description: "Could not initialize scanner",
+          variant: "destructive",
+        });
+        setIsScanning(false);
+        return;
+      }
     }
     
+    console.log("Requesting camera access...");
     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
     
     // Start scanning
@@ -44,6 +75,7 @@ const QRScanner = ({
       config,
       (decodedText) => {
         // QR code detected
+        console.log("QR code detected:", decodedText);
         try {
           onScan(decodedText);
           // Stop scanning after successful scan
@@ -53,6 +85,11 @@ const QRScanner = ({
           }
         } catch (error) {
           console.error("Error processing QR data:", error);
+          toast({
+            title: "QR Processing Error",
+            description: "Could not process the QR code data",
+            variant: "destructive",
+          });
         }
       },
       (errorMessage) => {
@@ -60,17 +97,23 @@ const QRScanner = ({
         console.log("QR error:", errorMessage);
       }
     ).catch(err => {
-      console.error("Scanner error:", err);
+      console.error("Scanner start error:", err);
       setPermissionDenied(true);
       setIsScanning(false);
+      toast({
+        title: "Camera Access Error",
+        description: "Please allow camera access to scan QR codes",
+        variant: "destructive",
+      });
     });
   };
   
   const handleStopScan = () => {
+    console.log("Stopping scanner...");
     if (scannerRef.current && scannerRef.current.isScanning) {
       scannerRef.current.stop().catch(console.error);
-      setIsScanning(false);
     }
+    setIsScanning(false);
   };
   
   // For testing: simulate a scan with mock data
@@ -83,6 +126,7 @@ const QRScanner = ({
       maxAmount: 200,
     };
     
+    console.log("Simulating scan with data:", mockQrData);
     onScan(JSON.stringify(mockQrData));
     setIsScanning(false);
   };
@@ -114,7 +158,9 @@ const QRScanner = ({
               </style>
             </div>
             <p className="text-gray-500">
-              Please hold still while scanning the QR code
+              {permissionDenied 
+                ? "Camera access was denied. Please check your browser permissions." 
+                : "Please hold still while scanning the QR code"}
             </p>
             <Button 
               onClick={handleStopScan} 
@@ -174,6 +220,7 @@ const ScanQR = () => {
   const handleScan = (data: string) => {
     try {
       const parsedData: QRData = JSON.parse(data);
+      console.log("Scan successful, data:", parsedData);
       setScannedQrData(parsedData);
       toast({
         title: "QR Code Scanned",
@@ -181,6 +228,7 @@ const ScanQR = () => {
       });
       navigate(`/scanner/transaction/${parsedData.userId}`);
     } catch (error) {
+      console.error("Error parsing QR data:", error);
       toast({
         title: "Invalid QR Code",
         description: "The QR code could not be processed",
