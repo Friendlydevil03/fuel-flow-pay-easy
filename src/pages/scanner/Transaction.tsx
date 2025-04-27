@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,15 @@ const Transaction = () => {
     amount: "",
   });
   
-  if (!scannedQrData) {
-    navigate("/scanner");
+  // Use useEffect for navigation instead of direct rendering navigation
+  useEffect(() => {
+    if (!scannedQrData) {
+      navigate("/scanner");
+    }
+  }, [scannedQrData, navigate]);
+  
+  // If data is not available yet, render nothing
+  if (!scannedQrData || !currentStation) {
     return null;
   }
   
